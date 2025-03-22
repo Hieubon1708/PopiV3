@@ -35,13 +35,18 @@ namespace Hunter
             if (playerInShop.indexPlayerLevelData.skillSprite != null) skillImage.sprite = playerInShop.indexPlayerLevelData.skillSprite;
 
             int level = playerInShop.GetPlayerData().level;
-            
+
             for (int i = 0; i < indexBarPlayerLevels.Length; i++)
             {
                 if (i < level)
                 {
                     indexBarPlayerLevels[i].IsUnlocked(true);
                     stars[i].SetActive(true);
+                }
+                else
+                {
+                    indexBarPlayerLevels[i].IsUnlocked(false);
+                    stars[i].SetActive(false);
                 }
                 indexBarPlayerLevels[i].SetText(playerInShop.indexPlayerLevelData.indexTextLevels[i].content, playerInShop.indexPlayerLevelData.indexTextLevels[i].colorType, i + 1);
             }

@@ -7,6 +7,7 @@ namespace Hunter
     {
         public static GameController instance;
 
+        [HideInInspector]
         public GameObject map;
 
         public GameObject[] prePlayers;
@@ -17,6 +18,7 @@ namespace Hunter
 
         public GameObject preFxHealth;
         public GameObject preFxHealthRegen;
+        public GameObject preFxShield;
         public GameObject preFxStun;
         public GameObject preFxPoison;
         public GameObject preFxBurn;
@@ -29,6 +31,7 @@ namespace Hunter
 
         public void Start()
         {
+            Init();
         }
 
         public void Init()
@@ -67,9 +70,9 @@ namespace Hunter
 
         public enum PlayerType
         {
-            Megamon,
-            Sonic,
-            HieuBon
+            Bubba,
+            Catnap,
+            Megamon
         }
 
         public enum CharacterIndex
@@ -153,6 +156,13 @@ namespace Hunter
             GameObject healthRegen = Instantiate(preFxHealthRegen, parent.position, Quaternion.identity, parent);
             healthRegen.transform.localPosition = new Vector3(0, 3f, 0);
             particleSystem = healthRegen.GetComponent<ParticleSystem>();
+        }
+        
+        public void InstanceShield(Transform parent, out ParticleSystem particleSystem)
+        {
+            GameObject shield = Instantiate(preFxShield, parent.position, Quaternion.identity, parent);
+            shield.transform.localPosition = new Vector3(0, 3f, 0);
+            particleSystem = shield.GetComponentInChildren<ParticleSystem>();
         }
     }
 }

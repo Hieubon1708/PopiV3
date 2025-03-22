@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using DG.Tweening;
+using UnityEngine;
 using static Hunter.GameController;
 
 namespace Hunter
@@ -31,6 +32,8 @@ namespace Hunter
         Player player;
 
         ParticleSystem fxHealthRegen;
+
+        public ParticleSystem fxShield;
 
         public void Awake()
         {
@@ -113,9 +116,14 @@ namespace Hunter
                 }
             }
 
-            if (receiveBloodRate > 0 || getArmorRate > 0)
+            if (receiveBloodRate > 0)
             {
                 instance.InstanceHealthRegen(transform, out fxHealthRegen);
+            }
+            
+            if (getArmorRate > 0)
+            {
+                instance.InstanceShield(transform, out fxShield);
             }
 
             player.navMeshAgent.speed = playerBaseData.speed + playerBaseData.speed * speed / 100;
@@ -129,12 +137,18 @@ namespace Hunter
             player.hp = Mathf.Clamp((int)(player.hp + player.startHp * receiveBlood / 100), player.hp, player.startHp);
             player.health.PlusHp();
         }
-        
+
+        Tween delayShield;
+
         public void ArmorRegen()
         {
-            fxHealthRegen.Play();
-            player.armor = Mathf.Clamp((int)(player.armor + player.startHp * getArmor / 100), player.armor, player.startHp);
-            player.health.PlusArmor();
+            fxShield.Play();
+
+            delayShield.Kill();
+            delayShield = DOVirtual.DelayedCall(getArmor, delegate
+            {
+                fxShield.Stop();
+            }).SetUpdate(true);
         }
 
         public void BloodSucking()

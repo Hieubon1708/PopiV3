@@ -39,6 +39,13 @@ namespace Hunter
 
         public PlayerData playerData;
 
+        //test
+        public int level;
+        public int piece;
+        public bool isUnlock;
+        public bool isUnlockByPrice;
+        public int price;
+
         public void Awake()
         {
             button = GetComponent<Button>();
@@ -55,9 +62,16 @@ namespace Hunter
 
         public PlayerData GetPlayerData()
         {
-            if (playerData == null) playerData = GameManager.instance.GetPlayerData(playerInShopData.playerType);
-            playerData.isUnlocked = true;
-            playerData.level = 4;
+            if (playerData == null)
+            {
+                playerData = GameManager.instance.GetPlayerData(playerInShopData.playerType);
+                playerData.isUnlocked = isUnlock;
+                playerData.level = level;
+                playerData.amountPiece = piece;
+                playerInShopData.isUnlockByPrice = isUnlockByPrice;
+                playerInShopData.price = price;
+            }
+            
             return playerData;
         }
 
@@ -69,7 +83,7 @@ namespace Hunter
 
         void CheckFullUpgrade()
         {
-            sliderPiece.gameObject.SetActive(playerData.level < playerInShopData.totalUpgrades.Length);
+            sliderPiece.gameObject.SetActive(playerData.level < playerInShopData.totalUpgrades.Length - 1);
         }
 
         void OnClick()
@@ -78,13 +92,14 @@ namespace Hunter
 
             if (frameSelect.activeSelf) return;
 
-            bool isUpgradeFull = playerData.level >= playerInShopData.totalUpgrades.Length;
+            PlayerInformation.instance.SelectPlayer(playerInShopData.playerType);
+            PlayerInformation.instance.ReloadIndexLevel(playerInShopData.playerType);
+
+            bool isUpgradeFull = playerData.level > playerInShopData.totalUpgrades.Length;
             bool isEnoughPiece = isUpgradeFull ? false : playerData.amountPiece >= playerInShopData.totalUpgrades[playerData.level];
 
-            // nếu nhân vật đã unlock và đang sử dụng và nâng cấp chưa full và không đủ mảnh 
-            if (playerData.isUnlocked && isUsed && !isUpgradeFull && !isEnoughPiece
+            if (isUsed && isUpgradeFull || playerData.isUnlocked && !isEnoughPiece
 
-            // nếu nhân vật chưa unlock và phải mua bằng mảnh và không đủ mảnh 
                 || !playerData.isUnlocked && !isEnoughPiece && !playerInShopData.isUnlockByPrice) return;
 
             frameSelect.SetActive(true);
@@ -169,18 +184,31 @@ namespace Hunter
 
             PlayerInformation.instance.UpgradePlayerData(PlayerInformation.PlayerUpgradeType.IsUsed, playerInShopData.playerType);
 
-            PlayerInformation.instance.SelectPlayer(playerInShopData.playerType);
-            PlayerInformation.instance.ReloadIndexLevel(playerInShopData.playerType);
             GameManager.instance.CurrentPlayer = playerInShopData.playerType;
         }
 
         public void Upgrade()
         {
+            playerData.level++;
+
+            PlayerInformation.instance.UpgradePlayerData(PlayerInformation.PlayerUpgradeType.Level, playerInShopData.playerType);
+
             CheckFullUpgrade();
 
             DisableFrameSelect();
 
-            PlayerInformation.instance.UpgradePlayerData(PlayerInformation.PlayerUpgradeType.Level, playerInShopData.playerType);
+            PlayerModelInShop playerModelInShop = PlayerInformation.instance.GetPlayerModelInShop(playerInShopData.playerType);
+
+            if (playerModelInShop != null)
+            {
+                playerModelInShop.Upgrade();
+            }
+            else
+            {
+                Debug.LogError("!");
+            }
+
+            PlayerInformation.instance.ReloadIndexLevel(playerInShopData.playerType);
         }
     }
 }

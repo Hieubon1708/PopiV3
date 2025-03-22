@@ -74,6 +74,8 @@ namespace Hunter
             health.SubtractHp();
             if (this.hp <= 0)
             {
+                Debug.Log("ASdad");
+
                 LevelController.instance.StopProbes();
                 AudioController.instance.PlaySoundNVibrate(AudioController.instance.enemyDie, 0);
                 UIInGame.instance.camAni.Play("CamBossZoom");

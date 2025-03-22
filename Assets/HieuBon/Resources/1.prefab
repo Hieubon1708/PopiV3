@@ -375,7 +375,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b98d169584ef4304cbd5deb83c12d47f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  pool: {fileID: 0}
   navMeshData: {fileID: 23800000, guid: c55ef5765ae8c414f967d3c4d5ba3ba5, type: 2}
+  alertCameras: []
+  lasers: []
+  turrels: []
+  barrels: []
+  doors: []
+  alarms: []
+  objectBrokens: []
+  isAlert: 0
+  pathInfos: []
+  bots: []
+  botsReserve: []
+  players: []
+  alertType: 0
 --- !u!114 &6348513923573266188
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -786,7 +800,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &5659852633274318723
 RectTransform:
   m_ObjectHideFlags: 0
@@ -3874,6 +3888,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 4952647689644434068}
     m_Modifications:
+    - target: {fileID: 2882575951724441691, guid: c93081bfcca5ab14abf43c73552cd29e, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 4402127378751491192, guid: c93081bfcca5ab14abf43c73552cd29e, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0

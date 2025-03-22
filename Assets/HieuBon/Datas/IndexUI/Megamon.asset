@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Megamon
   m_EditorClassIdentifier: 
   playerName: MEGAMON
-  skillName: Hieu
+  skillName: MEGAMON
   skillSprite: {fileID: 0}
   indexTextLevels:
   - content: +5% chance to drop recovery pack (restores 10% health)

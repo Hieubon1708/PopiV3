@@ -218,7 +218,7 @@ namespace Hunter
                     coin = Random.Range(1, 4);
                     BridgeController.instance.Debug_Log("Enemy_2 " + coin);
                 }
-                else if (this as Boss1)
+                else if (this as Boss)
                 {
                     coin = Random.Range(4, 9);
                     BridgeController.instance.Debug_Log("Boss " + coin);
@@ -240,7 +240,7 @@ namespace Hunter
                     PlayerController.instance.PlayDollars(player.gameObject, new Vector3(transform.position.x, transform.position.y + 0.1f, transform.position.z), coin);
                 }
 
-                if (!(this as Boss1))
+                if (!(this as Boss))
                 {
                     GameController.instance.ReceiveBlood(transform.position);
                     GameController.instance.ReceiveArmor(transform.position);

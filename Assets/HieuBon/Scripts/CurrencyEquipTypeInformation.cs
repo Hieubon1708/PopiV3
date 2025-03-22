@@ -33,6 +33,7 @@ namespace Hunter
         public void NotWearing()
         {
             textLevel.enabled = false;
+            equipInformation = null;
         }
     }
 }

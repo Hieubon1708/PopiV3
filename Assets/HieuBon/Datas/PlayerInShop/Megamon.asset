@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5dbc707be73f24d419bb59679bf9bde3, type: 3}
   m_Name: Megamon
   m_EditorClassIdentifier: 
-  playerType: 0
+  playerType: 2
   isUnlockByPrice: 0
   price: 0
-  totalUpgrades: 1e00000028000000320000003c00000046000000
+  totalUpgrades: 0f00000019000000230000002d0000003700000041000000

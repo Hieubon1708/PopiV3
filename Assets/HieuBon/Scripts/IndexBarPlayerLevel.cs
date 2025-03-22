@@ -11,12 +11,6 @@ namespace Hunter
         public TextMeshProUGUI content;
         public GameObject lockLayer;
         public TextMeshProUGUI textLevel;
-        Image imageUnlock;
-
-        public void Awake()
-        {
-            imageUnlock = GetComponent<Image>();
-        }
 
         public void SetText(string text, PlayerInformation.ColorType colorType, int level)
         {
@@ -31,7 +25,6 @@ namespace Hunter
         public void IsUnlocked(bool locked)
         {
             lockLayer.SetActive(!locked);
-            imageUnlock.enabled = locked;
         }
     }
 }

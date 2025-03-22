@@ -16,17 +16,7 @@ namespace Hunter
 
         private void Awake()
         {
-            instance = this;
-
-            Equipments = new List<Equip>() {
-                new Equip(EquipType.Weapon, PlayerInformation.QualityLevel.Red, false) ,
-                new Equip(EquipType.Weapon, PlayerInformation.QualityLevel.Purple, false) ,
-                new Equip(EquipType.Shoe, PlayerInformation.QualityLevel.Green, false) ,
-                new Equip(EquipType.Ring, PlayerInformation.QualityLevel.Blue, false) ,
-                new Equip(EquipType.Necklace, PlayerInformation.QualityLevel.Gray, false) ,
-                new Equip(EquipType.Armor, PlayerInformation.QualityLevel.Yellow, false) ,
-                new Equip(EquipType.Hat, PlayerInformation.QualityLevel.Red, false)
-            };
+            instance = this;         
         }
 
         public int Level
@@ -81,7 +71,7 @@ namespace Hunter
         {
             get
             {
-                return (PlayerType)PlayerPrefs.GetInt("CurrentPlayer", (int)PlayerType.HieuBon);
+                return (PlayerType)PlayerPrefs.GetInt("CurrentPlayer", (int)PlayerType.Megamon);
             }
             set
             {

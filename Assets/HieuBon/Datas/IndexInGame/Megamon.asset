@@ -15,7 +15,40 @@ MonoBehaviour:
   playerIndexes:
   - level: 1
     characterIndex: 16
-    value: 1
+    value: 3
   - level: 1
     characterIndex: 17
-    value: 100
+    value: 50
+  - level: 1
+    characterIndex: 3
+    value: 50
+  - level: 1
+    characterIndex: 5
+    value: 50
+  - level: 1
+    characterIndex: 6
+    value: 50
+  - level: 1
+    characterIndex: 10
+    value: 15
+  - level: 1
+    characterIndex: 11
+    value: 50
+  - level: 1
+    characterIndex: 13
+    value: 50
+  - level: 1
+    characterIndex: 14
+    value: 50
+  - level: 1
+    characterIndex: 15
+    value: 50
+  - level: 1
+    characterIndex: 18
+    value: 3
+  - level: 1
+    characterIndex: 19
+    value: 50
+  - level: 1
+    characterIndex: 12
+    value: 5

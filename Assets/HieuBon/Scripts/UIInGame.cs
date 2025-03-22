@@ -46,7 +46,7 @@ namespace Hunter
             DOVirtual.DelayedCall(2.5f, delegate
             {
                 layerCover.raycastTarget = false;
-                gamePlay.panelLose.SetActive(true);
+                //gamePlay.panelLose.SetActive(true);
             });
         }
 
@@ -211,14 +211,6 @@ namespace Hunter
             });
         }
 
-        public void Update()
-        {
-            if (Input.GetKeyDown(KeyCode.A))
-            {
-                Win(null, 0);
-            }
-        }
-
         public void Play()
         {
             //EventManager.EmitEvent(EventVariables.CountDownShowAdsInGame);
@@ -370,7 +362,5 @@ namespace Hunter
         {
             glow.Stop();
         }
-
-
     }
 }

@@ -12,6 +12,7 @@ namespace Hunter
         public CinemachineVirtualCamera cinemachineCam;
         private CinemachineBasicMultiChannelPerlin cinemachineBasicMultiChannelPerlin;
         CinemachineTransposer cinemachineTransposer;
+
         public float y1;
         public float y2;
         public float time;

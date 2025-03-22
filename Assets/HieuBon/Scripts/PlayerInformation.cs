@@ -60,6 +60,10 @@ namespace Hunter
         PlayerInShop[] playerInShops;
         IndexPlayerLevel indexPlayerLevel;
 
+        public EquipData[] equipDatas;
+
+        IndexAttackAndHealth indexAttackAndHealth;
+
         public enum ColorType
         {
             Health, Damage, DamageCrit, Default
@@ -83,6 +87,16 @@ namespace Hunter
         public enum PlayerUpgradeType
         {
             Level, Piece, IsUnlock, IsUsed
+        }
+
+        public EquipData GetEquipData(EquipType equipType, PlayerInformation.QualityLevel qualityLevel)
+        {
+            foreach (var equipData in equipDatas)
+            {
+                if (equipData.equipType == equipType && equipData.qualityLevel == qualityLevel) return equipData;
+            }
+
+            return null;
         }
 
         public GameObject GetPrePlayer(GameController.PlayerType playerType)
@@ -124,6 +138,16 @@ namespace Hunter
                 case EquipType.Weapon: return currentWeapon.transform;
                 default: return currentRing.transform;
             }
+        }
+
+        public PlayerModelInShop GetPlayerModelInShop(GameController.PlayerType playerType)
+        {
+            foreach (var playerModel in playerModels)
+            {
+                if(playerModel.playerType == playerType) return playerModel;
+            }
+
+            return null;
         }
 
         CurrencyEquipTypeInformation GetCurrencyEquipInfor(EquipType equipType)
@@ -224,12 +248,23 @@ namespace Hunter
             PlayerPrefs.DeleteAll();
             instance = this;
             inventory = GetComponentInChildren<Inventory>();
+            indexAttackAndHealth = GetComponentInChildren<IndexAttackAndHealth>(true);
             indexPlayerLevel = GetComponentInChildren<IndexPlayerLevel>(true);
             playerInShops = GetComponentsInChildren<PlayerInShop>(true);
         }
 
         public void Start()
         {
+            GameManager.instance.Equipments = new List<Equip>() {
+                new Equip(EquipType.Weapon, PlayerInformation.QualityLevel.Red, false) ,
+                new Equip(EquipType.Weapon, PlayerInformation.QualityLevel.Purple, false) ,
+                new Equip(EquipType.Shoe, PlayerInformation.QualityLevel.Green, false) ,
+                new Equip(EquipType.Ring, PlayerInformation.QualityLevel.Blue, false) ,
+                new Equip(EquipType.Necklace, PlayerInformation.QualityLevel.Gray, false) ,
+                new Equip(EquipType.Armor, PlayerInformation.QualityLevel.Yellow, false) ,
+                new Equip(EquipType.Hat, PlayerInformation.QualityLevel.Red, false)
+            };
+
             GameController.PlayerType[] playerEnums = (GameController.PlayerType[])Enum.GetValues(typeof(GameController.PlayerType));
 
             for (int i = 0; i < playerEnums.Length; i++)
@@ -284,9 +319,9 @@ namespace Hunter
 
         public PlayerInShop GetPlayerInShop(GameController.PlayerType playerType)
         {
-            foreach(var player in playerInShops)
+            foreach (var player in playerInShops)
             {
-                if(player.playerInShopData.playerType == playerType) return player;
+                if (player.playerInShopData.playerType == playerType) return player;
             }
             return null;
         }
@@ -325,6 +360,56 @@ namespace Hunter
             }
         }
 
+        public struct AttackAndHealth
+        {
+            public int attack;
+            public int health;
+
+            public AttackAndHealth(int attackValue, int healthValue)
+            {
+                attack = attackValue;
+                health = healthValue;
+            }
+
+            public static AttackAndHealth operator +(AttackAndHealth a, AttackAndHealth b)
+            {
+                return new AttackAndHealth(a.attack + b.attack, a.health + b.health);
+            }
+
+            public static AttackAndHealth Zero
+            {
+                get
+                {
+                    return new AttackAndHealth(0, 0);
+                }
+            }
+        }
+
+        AttackAndHealth GetAttackAndHealthQuip(EquipType equipType, PlayerInformation.QualityLevel qualityLevel)
+        {
+            foreach (var equipData in equipDatas)
+            {
+                if (equipData.equipType == equipType && equipData.qualityLevel == qualityLevel) return new AttackAndHealth(equipData.damage, equipData.hp);
+            }
+            return new AttackAndHealth(0, 0);
+        }
+
+        public AttackAndHealth GetCurrentAttackAndHealth()
+        {
+            PlayerIndexes playerIndexes = PlayerController.instance.player.playerIndexes;
+
+            AttackAndHealth attackAndHealth = new AttackAndHealth(10, playerIndexes.playerBaseData.hp);
+
+            if (currentArmor.equipInformation != null) attackAndHealth += GetAttackAndHealthQuip(currentArmor.equipInformation.equipType, currentArmor.equipInformation.qualityLevel);
+            if (currentHat.equipInformation != null) attackAndHealth += GetAttackAndHealthQuip(currentHat.equipInformation.equipType, currentHat.equipInformation.qualityLevel);
+            if (currentNecklace.equipInformation != null) attackAndHealth += GetAttackAndHealthQuip(currentNecklace.equipInformation.equipType, currentNecklace.equipInformation.qualityLevel);
+            if (currentRing.equipInformation != null) attackAndHealth += GetAttackAndHealthQuip(currentRing.equipInformation.equipType, currentRing.equipInformation.qualityLevel);
+            if (currentShoe.equipInformation != null) attackAndHealth += GetAttackAndHealthQuip(currentShoe.equipInformation.equipType, currentShoe.equipInformation.qualityLevel);
+            if (currentWeapon.equipInformation != null) attackAndHealth += GetAttackAndHealthQuip(currentWeapon.equipInformation.equipType, currentWeapon.equipInformation.qualityLevel);
+
+            return attackAndHealth;
+        }
+
         public void OnClickButtonHeroAndEquip(ButtonHeroAndEquip buttonHeroAndEquip)
         {
             for (int i = 0; i < buttonHeroAndEquips.Length; i++)
@@ -344,6 +429,8 @@ namespace Hunter
         {
             CurrencyEquipTypeInformation currencyEquipInformation = GetCurrencyEquipInfor(equipSelect.equipType);
 
+            AttackAndHealth currentAttackAndHealth = GetCurrentAttackAndHealth();
+
             if (equipSelect.isWeared)
             {
                 NotWearing(equipSelect);
@@ -359,6 +446,9 @@ namespace Hunter
 
                 Wearing(currencyEquipInformation, equipSelect);
             }
+            AttackAndHealth targetAttackAndHealth = GetCurrentAttackAndHealth();
+
+            indexAttackAndHealth.UpdateAttackAndHealth(currentAttackAndHealth.attack, targetAttackAndHealth.attack, currentAttackAndHealth.health, targetAttackAndHealth.health);
 
             inventory.Sort();
 
@@ -399,6 +489,11 @@ namespace Hunter
         {
             if (equipParent.activeSelf) return;
 
+            GameController.PlayerType playerType = GameManager.instance.CurrentPlayer;  
+
+            PlayerInformation.instance.SelectPlayer(playerType);
+            PlayerInformation.instance.ReloadIndexLevel(playerType);
+
             background.DOKill();
 
             background.DOAnchorPosX(0f, 0.25f).SetEase(Ease.Linear);
@@ -417,6 +512,8 @@ namespace Hunter
 
             equipParent.SetActive(false);
             heroParent.SetActive(true);
+
+            DisableFrameSelect();
 
             scrollRectIndex.normalizedPosition = new Vector2(0, 1);
         }

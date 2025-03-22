@@ -170,7 +170,9 @@ namespace Hunter
 
         public void SubtractHp(int hp, Transform killer)
         {
-            //if (this.hp <= 0 || LevelController.instance.bots.Count == 0 && UIController.instance.gamePlay.tempStageType == StageType.StealthBoss) return;
+            // && UIController.instance.gamePlay.tempStageType == StageType.StealthBoss
+
+            if (this.hp <= 0 || LevelController.instance.bots.Count == 0 || playerIndexes.fxShield != null && playerIndexes.fxShield.isPlaying) return;
 
             if (playerIndexes.IsDodge())
             {
